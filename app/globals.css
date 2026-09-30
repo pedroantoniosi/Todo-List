@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+
+
+.bg-primary {
+  background-color: hsl(275, 100%, 45%);
+
+  &:hover {
+    background-color: hsl(275, 100%, 35%);
+  }
+}
