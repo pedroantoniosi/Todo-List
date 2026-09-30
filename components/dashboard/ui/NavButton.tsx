@@ -16,7 +16,7 @@ export default function NavButton({
     <button
       type="button"
       onClick={onClick}
-      className={` flex flex-col gap-2 md:flex-row md:gap-4 font-semibold transition cursor-pointer md:hover:bg-zinc-200 md:p-2 md:rounded-md
+      className={` flex flex-col  justify-center items-center gap-2 md:flex-row md:gap-4 font-semibold transition cursor-pointer md:hover:bg-zinc-200 md:p-2 md:rounded-md
       `}
     >
       <Icon size={20} />

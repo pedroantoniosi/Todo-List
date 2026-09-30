@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary" | "unselected";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: ButtonVariant;
@@ -11,6 +11,7 @@ export default function Button({ variant, children, ...props }: ButtonProps) {
   const variantClasses = {
     primary: "bg-primary text-white hover:bg-gray-300 rounded-md",
     secondary: "bg-primary text-white hover:bg-gray-300 rounded-4xl",
+    unselected: "bg-zinc-300 text-black hover:bg-gray-300 rounded-4xl",
   };
 
   return (

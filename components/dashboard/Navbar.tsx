@@ -15,13 +15,12 @@ export default function Navbar({ onOpenFilters, onOpenSettings }: NavbarProps) {
 
   function handleLogout() {
     localStorage.removeItem("token");
-
     router.push("/login");
   }
 
   return (
-    <div className="min-w-[320px] bg-white px-4 py-24">
-      <ul className="flex justify-evenly gap-2 md:flex-col md:gap-4">
+    <div className="fixed bottom-0 left-0 z-50 w-full bg-white px-4 py-4 md:flex md:min-w-[320px] md:px-4 md:py-24">
+      <ul className="flex w-full justify-evenly gap-2 md:flex-col md:gap-4">
         <li>
           <NavButton label="Tarefas" icon={ListTodo} />
         </li>

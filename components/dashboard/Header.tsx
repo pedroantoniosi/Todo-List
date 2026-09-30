@@ -1,5 +1,6 @@
 import Container from "../ui/Container";
 import Button from "./ui/Button";
+import { Plus } from "lucide-react";
 
 interface HeaderProps {
   totalTasks: number;
@@ -27,9 +28,8 @@ export default function Header({
 
         <div className="flex items-center gap-4">
           <Button variant="primary" onClick={onCreateTask}>
-            <div className="flex gap-2">
-              <span>+</span>
-
+            <div className="flex items-center justify-center  gap-2">
+              <Plus size={18} strokeWidth={2} />
               <span className="hidden md:block">Nova Tarefa</span>
             </div>
           </Button>
