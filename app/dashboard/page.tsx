@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { getTasks } from "@/components/dashboard/api";
+
 import CreateTaskModal from "@/components/dashboard/CreateTaskModal";
 import EditTaskModal from "@/components/dashboard/EditTaskModal";
 import Filters from "@/components/dashboard/Filters";
@@ -28,23 +30,19 @@ interface TaskData {
 type MessageType = "success" | "error" | "warning" | "info";
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<TaskData[]>([]);
+  const router = useRouter();
 
+  const [tasks, setTasks] = useState<TaskData[]>([]);
   const [activeStatus, setActiveStatus] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-
   const [sortOrder, setSortOrder] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
-
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
-
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const [message, setMessage] = useState("");
@@ -59,6 +57,7 @@ export default function Dashboard() {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      router.replace("/login");
       return;
     }
 
@@ -69,9 +68,10 @@ export default function Dashboard() {
       .catch((error) => {
         console.error("Erro ao carregar tarefas:", error);
 
-        showMessage("Não foi possível carregar suas tarefas.", "error");
+        localStorage.removeItem("token");
+        router.replace("/login");
       });
-  }, []);
+  }, [router]);
 
   function handleEditTask(task: TaskData) {
     setSelectedTask(task);
@@ -87,15 +87,13 @@ export default function Dashboard() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      showMessage("Usuário não autenticado.", "warning");
-
+      router.replace("/login");
       return;
     }
 
     const previousCompleted = task.completed;
     const newCompleted = !previousCompleted;
 
-    // Atualização otimista da interface
     setTasks((currentTasks) =>
       currentTasks.map((currentTask) =>
         currentTask.id === task.id
@@ -123,12 +121,17 @@ export default function Dashboard() {
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.replace("/login");
+          return;
+        }
+
         const data = await response.json();
 
         throw new Error(data.message || "Erro ao atualizar status da tarefa.");
       }
     } catch (error) {
-      // Rollback caso a API falhe
       setTasks((currentTasks) =>
         currentTasks.map((currentTask) =>
           currentTask.id === task.id
