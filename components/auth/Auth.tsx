@@ -7,12 +7,13 @@ import { useRouter } from "next/navigation";
 interface AuthProps {
   type: "login" | "register";
   children: ReactNode;
-  onSubmit?: (event: FormEvent<HTMLFormElement>) => void | Promise<void>;
+  onSubmit?: (
+    event: FormEvent<HTMLFormElement>,
+  ) => void | boolean | Promise<void | boolean>;
 }
 
 export default function Auth({ type, children, onSubmit }: AuthProps) {
   const router = useRouter();
-
   const isLogin = type === "login";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -20,9 +21,9 @@ export default function Auth({ type, children, onSubmit }: AuthProps) {
       return;
     }
 
-    await onSubmit(event);
+    const success = await onSubmit(event);
 
-    if (isLogin) {
+    if (isLogin && success) {
       router.push("/dashboard");
     }
   }
@@ -30,12 +31,8 @@ export default function Auth({ type, children, onSubmit }: AuthProps) {
   return (
     <main className="min-h-screen flex items-center bg-fuchsia-300/40 p-2 sm:p-4">
       <div className="relative mx-auto w-full flex max-w-200 overflow-hidden rounded-2xl border border-black/15 bg-[#fcf7ff] shadow-2xl">
-        {/* =========================
-            FORM AREA
-        ========================== */}
         <section className="relative flex w-full items-center justify-center px-6 py-12 sm:px-10 xl:px-20">
           <div className="w-full max-w-md">
-            {/* Mobile logo */}
             <Link
               href="/"
               className="mb-12 flex items-center gap-2 text-sm font-semibold text-black lg:hidden"
@@ -46,7 +43,6 @@ export default function Auth({ type, children, onSubmit }: AuthProps) {
               Touri
             </Link>
 
-            {/* Header */}
             <div className="mb-8">
               <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-black/35">
                 {isLogin ? "Bem-vindo de volta" : "Comece agora"}
@@ -63,12 +59,10 @@ export default function Auth({ type, children, onSubmit }: AuthProps) {
               </p>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
               {children}
             </form>
 
-            {/* Footer */}
             <div className="mt-8 text-center text-xs text-black/35">
               {isLogin ? (
                 <>

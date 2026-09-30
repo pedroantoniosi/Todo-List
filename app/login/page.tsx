@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
 import Auth from "@/components/auth/Auth";
 import AuthButton from "@/components/auth/AuthButton";
 import AuthInput from "@/components/auth/AuthInput";
@@ -10,7 +9,9 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<boolean> {
     event.preventDefault();
 
     setError("");
@@ -40,14 +41,17 @@ export default function Login() {
 
       if (!response.ok) {
         setError(data.message ?? "Não foi possível fazer login.");
-        return;
+        return false;
       }
 
       localStorage.setItem("token", data.token);
 
       alert("Login realizado com sucesso!");
+
+      return true;
     } catch {
       setError("Não foi possível conectar ao servidor.");
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +98,6 @@ export default function Login() {
 
       <div className="flex items-center gap-3 py-1">
         <div className="h-px flex-1 bg-black/10" />
-
         <div className="h-px flex-1 bg-black/10" />
       </div>
     </Auth>
